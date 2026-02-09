@@ -4,9 +4,8 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-
-// على GitHub Pages يكون مثلاً /SuperStar_Project/؛ محلياً /
-const base = import.meta.env.BASE_URL
+import logo2 from '../assets/logo2.png'
+import sky from '../assets/sky.jpg'
 
 export default function RoleSelect() {
   const navigate = useNavigate()
@@ -20,7 +19,7 @@ export default function RoleSelect() {
         alignItems: 'center',
         justifyContent: 'center',
         p: 3,
-        backgroundImage: `url(${base}sky.jpg)`,
+        backgroundImage: `url(${sky})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -58,7 +57,7 @@ export default function RoleSelect() {
         >
           <Box
             component="img"
-            src={`${base}logo2.png`}
+            src={logo2}
             alt="Super Star"
             sx={{
               width: 280,
