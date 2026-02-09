@@ -72,7 +72,7 @@ function last7DaysData(orders: { createdAt: string; totalAmount: number }[]) {
 export default function AdminView() {
   const [mainTab, setMainTab] = useState(0)
   const [deliveryTab, setDeliveryTab] = useState(0)
-  const [selectedCompany, setSelectedCompany] = useState<DeliveryCompanyId>(DELIVERY_OPTIONS[0].value)
+  const [selectedCompany, setSelectedCompany] = useState<DeliveryCompanyId>(DELIVERY_OPTIONS[0]?.value ?? 'aramex')
   const [orders, setOrders] = useState(getOrders())
   const [deliveryStats, setDeliveryStats] = useState(getDeliveryStats())
   const [chartPeriod, setChartPeriod] = useState<'اليوم' | 'الأسبوع' | 'الكل'>('الأسبوع')
@@ -88,8 +88,6 @@ export default function AdminView() {
   const companyStats = deliveryStats.find((s) => s.id === selectedCompany)
   const companyName = DELIVERY_OPTIONS.find((c) => c.value === selectedCompany)?.label ?? selectedCompany
   const totalRevenue = orders.reduce((a, o) => a + o.totalAmount, 0)
-  const deliveredCount = orders.filter((o) => o.status === 'تم التوصيل').length
-  const companiesWithOrders = deliveryStats.filter((s) => s.orders > 0).length
 
   const chartDataCompanies = deliveryStats.map((s) => ({
     name: s.name,
@@ -239,13 +237,13 @@ export default function AdminView() {
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0ebe3" />
-                    <XAxis dataKey="date" tick={{ fontSize: 10 }} tickFormatter={(v) => v.slice(5)} />
+                    <XAxis dataKey="date" tick={{ fontSize: 10 }} tickFormatter={(v) => String(v ?? '').slice(5)} />
                     <YAxis yAxisId="left" tick={{ fontSize: 10 }} label={{ value: 'عدد الطلبات', angle: -90, position: 'insideLeft', style: { fontSize: 10 } }} />
                     <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} label={{ value: 'المبلغ', angle: 90, position: 'insideRight', style: { fontSize: 10 } }} />
                     <Tooltip
                       contentStyle={{ borderRadius: 8, border: '1px solid #e8e0d5' }}
                       labelFormatter={(v) => v}
-                      formatter={(value: number, name: string) => [name === 'المبلغ' ? `${value} ₪` : value, name === 'المبلغ' ? 'المبلغ الإجمالي' : 'عدد الطلبات']}
+                      formatter={(value, name) => [name === 'المبلغ' ? `${value ?? 0} ₪` : (value ?? 0), name === 'المبلغ' ? 'المبلغ الإجمالي' : 'عدد الطلبات']}
                     />
                     <Legend />
                     <Area yAxisId="right" type="monotone" dataKey="المبلغ" fill="url(#areaAmount)" stroke={LINE_AMOUNT} strokeWidth={2} name="المبلغ الإجمالي" />
@@ -286,13 +284,13 @@ export default function AdminView() {
                       paddingAngle={2}
                       dataKey="value"
                       nameKey="name"
-                      label={({ name, value }) => (totalForPie ? `${name} (${Math.round((value / totalForPie) * 100)}%)` : name)}
+                      label={({ name, value }) => (totalForPie && value != null ? `${name} (${Math.round((value / totalForPie) * 100)}%)` : name)}
                     >
-                      {revenuePieData.map((_, i) => (
-                        <Cell key={i} fill={revenuePieData[i].fill} />
+                      {revenuePieData.map((row, i) => (
+                        <Cell key={i} fill={row.fill} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(value: number) => [`${value} ₪`, 'إيراد']} contentStyle={{ borderRadius: 8, border: '1px solid #e8e0d5' }} />
+                    <Tooltip formatter={(value: number | undefined) => [`${value ?? 0} ₪`, 'إيراد']} contentStyle={{ borderRadius: 8, border: '1px solid #e8e0d5' }} />
                   </PieChart>
                 </ResponsiveContainer>
               </Box>
@@ -328,10 +326,10 @@ export default function AdminView() {
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0ebe3" />
                     <XAxis type="number" tick={{ fontSize: 10 }} />
                     <YAxis dataKey="name" type="category" width={65} tick={{ fontSize: 11 }} />
-                    <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #e8e0d5' }} formatter={(v: number) => [v, 'طلب']} />
+                    <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #e8e0d5' }} formatter={(v: number | undefined) => [v ?? 0, 'طلب']} />
                     <Bar dataKey="value" radius={[0, 6, 6, 0]} name="عدد الطلبات">
-                      {statusChartData.map((_, i) => (
-                        <Cell key={i} fill={statusChartData[i].fill} />
+                      {statusChartData.map((row, i) => (
+                        <Cell key={i} fill={row.fill} />
                       ))}
                     </Bar>
                   </BarChart>

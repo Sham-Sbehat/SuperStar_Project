@@ -1,4 +1,5 @@
 {
+  "homepage": "https://Sham-Sbehat.github.io/SuperStar_Project",
   "name": "superstar-project",
   "private": true,
   "version": "0.0.1",
@@ -7,6 +8,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
@@ -28,6 +31,7 @@
     "eslint": "^9.15.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
+    "gh-pages": "^6.3.0",
     "globals": "^15.12.0",
     "typescript": "~5.6.0",
     "typescript-eslint": "^8.15.0",

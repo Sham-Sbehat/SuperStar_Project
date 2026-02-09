@@ -11,7 +11,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter>
+      <BrowserRouter  basename="/SuperStar_Project/">
         <Routes>
           <Route path="/" element={<RoleSelect />} />
           <Route path="/seller" element={<Layout role="seller" />}>
